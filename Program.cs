@@ -27,7 +27,23 @@ namespace ralphie
                 }
                 else
                 {
-                    bot.ManualMessage(input);   // Dev testing to send messages to chat, remove when unnecessary
+                    if (input.StartsWith("/w"))
+                    {
+                        string[] substrings = input.Split();
+                        string receiver = substrings[1];
+                        string message = "";
+                        int target = substrings.Length;
+
+                        for (int i = 2; i < target; i++)
+                        {
+                            message += $"{substrings[i]} ";
+                        }
+                        bot.ManualWhisper(receiver, message);
+                    }
+                    else
+                    {
+                        bot.ManualMessage(input);   // Dev testing to send messages to chat, remove when unnecessary
+                    }
                 }
             } while (GlobalOptions.IsConnected == true);
         }

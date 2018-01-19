@@ -78,7 +78,12 @@ namespace ralphie.twitch.chat
         // Send message as bot from console (dev only - remove when unnecessary for testing)
         internal void ManualMessage(string message)
         {
-            client.SendMessage(message, false);
+            client.SendMessage(message);
+        }
+        // Send whisper as bot from console (dev only - remove when unnecessary for testing)
+        internal void ManualWhisper(string receiver, string message)
+        {
+            client.SendWhisper(receiver, message);
         }
 
         // Connection events
@@ -97,6 +102,7 @@ namespace ralphie.twitch.chat
         private void Client_OnConnected(object sender, OnConnectedArgs e)
         {
             client.ChatThrottler.StartQueue();
+            client.WhisperThrottler.StartQueue();
             Program.SendToConsole("Connected.");
             Program.GlobalOptions.IsConnected = true;
         }
@@ -108,7 +114,7 @@ namespace ralphie.twitch.chat
         // Message events
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.ChatMessage.Username}: {e.ChatMessage.Message}";
+            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.ChatMessage.Channel}>] {e.ChatMessage.Username}: {e.ChatMessage.Message}";
             Program.SendToConsole(message);
         }
         private void Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
@@ -118,24 +124,24 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnMessageSent(object sender, OnMessageSentArgs e)
         {
-            string message = $"[Twitch:{DateTime.Now.ToShortTimeString()}]{e.SentMessage.Channel}> {e.SentMessage.Message}";
+            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.SentMessage.Channel}<<] {e.SentMessage.DisplayName}: {e.SentMessage.Message}";
             Program.SendToConsole(message, true);
         }
 
         // Whisper events
         private void Client_OnWhisperReceived(object sender, OnWhisperReceivedArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] **{e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
+            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
             Program.SendToConsole(message);
         }        
         private void Client_OnWhisperCommandReceived(object sender, OnWhisperCommandReceivedArgs e)
         {
-            string message = $"[Twitch:{DateTime.Now.ToShortTimeString()} | Twitch] **{e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
+            string message = $"[Twitch:{DateTime.Now.ToShortTimeString()} | Twitch.!W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
             Program.SendToConsole(message);
         }
         private void Client_OnWhisperSent(object sender, OnWhisperSentArgs e)
         {
-            string message = $"[Twitch:{DateTime.Now.ToShortTimeString()}]{e.Receiver}> {e.Message}";
+            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**<<] {botUserName}>{e.Receiver}: {e.Message}";
             Program.SendToConsole(message, true);
         }
 
