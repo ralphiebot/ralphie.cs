@@ -8,6 +8,8 @@ namespace ralphie.Commands
 {
     class Command
     {
+        public char CommandPrefix { get; set; };
+
         // TODO
     }
 }

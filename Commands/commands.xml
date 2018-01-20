@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands prefix="!">
+    <!-- global option settings -->
+    <option_1 setting="setting"/> 
+    <option_2 setting="setting"/>
+    
+    <!-- Individual commands -->
+    <command name="name" default="true" isEnabled="true">
+        <access_level>everyone</access_level>
+        <output containsLogic="true">command string output to chat</output>
+        <desc>CP description text</desc>
+        <help>Help String Output to chat</help>
+        <aliases>
+            <alias name="name"/>
+            <alias name="name"/>
+        </aliases>
+    </command>
+</commands>
