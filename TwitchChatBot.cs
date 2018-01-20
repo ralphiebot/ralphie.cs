@@ -21,21 +21,34 @@ namespace ralphie.twitch.chat
         // Call bot to connect
         internal void Connect()
         {
-            Program.SendToConsole("Initializing Twitch Chat Bot...");
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "System";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "";
+            consoleMessage[4] = "";
+
+            consoleMessage[5] = "Initializing Twitch Chat Bot...";
+            Program.SendToConsole(consoleMessage);
             client = new TwitchClient(credentials, streamerChannel, logging: false);
 
             string test = "!";   // Replace this later with logic to read from commands.xml
             char cmd = test[0];
 
-            Program.SendToConsole($"Setting command identifier to {cmd}.");
+            consoleMessage[5] = $"Setting command identifier to {cmd}.";
+            Program.SendToConsole(consoleMessage);
             client.AddChatCommandIdentifier(cmd);
             client.AddWhisperCommandIdentifier(cmd);
 
-            Program.SendToConsole("Setting Twitch chat throttle set to 19 messages every 30 seconds.");
+            // set message throttling
+            consoleMessage[5] = "Setting Twitch chat throttle set to 19 messages every 30 seconds.";
+            Program.SendToConsole(consoleMessage);
             client.ChatThrottler = new TwitchLib.Services.MessageThrottler(client, 19, TimeSpan.FromSeconds(30));
             client.WhisperThrottler = new TwitchLib.Services.MessageThrottler(client, 19, TimeSpan.FromSeconds(30));
 
-            Program.SendToConsole("Registering Twitch chat events...");
+            consoleMessage[5] = "Registering Twitch chat events...";
+            Program.SendToConsole(consoleMessage);
+
             // Connection events
             client.OnLog += Client_OnLog;
             client.OnIncorrectLogin += Client_OnIncorrectLogin;
@@ -62,17 +75,23 @@ namespace ralphie.twitch.chat
             client.OnJoinedChannel += Client_OnJoinedChannel;
             client.OnLeftChannel += Client_OnLeftChannel;
 
-            Program.SendToConsole("Connecting to Twitch chat...");
+            consoleMessage[5] = "Connecting to Twitch chat...";
+            Program.SendToConsole(consoleMessage);
             client.Connect();
-
-
         }
-
 
         // Call bot to disconnect
         internal void Disconnect()
         {
-            Program.SendToConsole("Disconnecting...");
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "Connection";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "";
+            consoleMessage[4] = "";
+            consoleMessage[5] = "Disconnecting";
+            Program.SendToConsole(consoleMessage);
+            
             client.Disconnect();
         }
         // Send message as bot from console (dev only - remove when unnecessary for testing)
@@ -80,6 +99,7 @@ namespace ralphie.twitch.chat
         {
             client.SendMessage(message);
         }
+
         // Send whisper as bot from console (dev only - remove when unnecessary for testing)
         internal void ManualWhisper(string receiver, string message)
         {
@@ -93,78 +113,176 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
         {
-            Program.SendToConsole("Incorrect Login!");
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "Connection";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "Incorrect Login!";
+            consoleMessage[4] = "";
+            consoleMessage[5] = e.Exception.Message;
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnConnecitonError(object sender, OnConnectionErrorArgs e)
         {
-            Program.SendToConsole($"Error!! {e.Error}");
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "Connection";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "Connection Error!";
+            consoleMessage[4] = "";
+            consoleMessage[5] = e.Error.Message;
+            Program.SendToConsole(consoleMessage);
+
+            //Program.SendToConsole($"Error!! {e.Error}");
         }
         private void Client_OnConnected(object sender, OnConnectedArgs e)
         {
+            // Start up chatt throttlers
             client.ChatThrottler.StartQueue();
             client.WhisperThrottler.StartQueue();
-            Program.SendToConsole("Connected.");
+
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "Connection";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "";
+            consoleMessage[4] = "";
+            consoleMessage[5] = "Connected";
+            Program.SendToConsole(consoleMessage);
+            
             Program.GlobalOptions.IsConnected = true;
         }
         private void Client_OnDisconnected(object sender, OnDisconnectedArgs e)
         {
-            Console.WriteLine("\rDisconnected");
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "Connection";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = "";
+            consoleMessage[4] = "";
+            consoleMessage[5] = "Disconnected";
+            Program.SendToConsole(consoleMessage);
         }
 
         // Message events
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.ChatMessage.Channel}>] {e.ChatMessage.Username}: {e.ChatMessage.Message}";
-            Program.SendToConsole(message);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.ChatMessage.Username;
+            consoleMessage[4] = e.ChatMessage.Channel;
+            consoleMessage[5] = e.ChatMessage.Message;
+            
+            //string message2 = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.ChatMessage.Channel}>] {e.ChatMessage.Username}: {e.ChatMessage.Message}";
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
-            string message = "Chat command received, you need to do something about it!";
-            Program.SendToConsole(message);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.Command.ChatMessage.Username;
+            consoleMessage[4] = e.Command.ChatMessage.Channel;
+            consoleMessage[5] = e.Command.ChatMessage.Message;
+            //string message = "Chat command received, you need to do something about it!";
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnMessageSent(object sender, OnMessageSentArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.SentMessage.Channel}<<] {e.SentMessage.DisplayName}: {e.SentMessage.Message}";
-            Program.SendToConsole(message, true);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = "<<<";
+            consoleMessage[3] = e.SentMessage.DisplayName;
+            consoleMessage[4] = e.SentMessage.Channel;
+            consoleMessage[5] = e.SentMessage.Message;
+
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.#{e.SentMessage.Channel}<<] {e.SentMessage.DisplayName}: {e.SentMessage.Message}";
+            Program.SendToConsole(consoleMessage, true);
         }
 
         // Whisper events
         private void Client_OnWhisperReceived(object sender, OnWhisperReceivedArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
-            Program.SendToConsole(message);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "**";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.WhisperMessage.Username;
+            consoleMessage[4] = e.WhisperMessage.BotUsername;
+            consoleMessage[5] = e.WhisperMessage.Message;
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
+            Program.SendToConsole(consoleMessage);
         }        
         private void Client_OnWhisperCommandReceived(object sender, OnWhisperCommandReceivedArgs e)
         {
-            string message = $"[Twitch:{DateTime.Now.ToShortTimeString()} | Twitch.!W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
-            Program.SendToConsole(message);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "**";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.WhisperMessage.Username;
+            consoleMessage[4] = e.WhisperMessage.BotUsername;
+            consoleMessage[5] = e.WhisperMessage.Message;
+            //string message = $"[Twitch:{DateTime.Now.ToShortTimeString()} | Twitch.!W**>>] {e.WhisperMessage.Username}: {e.WhisperMessage.Message}";
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnWhisperSent(object sender, OnWhisperSentArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**<<] {botUserName}>{e.Receiver}: {e.Message}";
-            Program.SendToConsole(message, true);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "**";
+            consoleMessage[2] = "<<<";
+            consoleMessage[3] = e.Username;
+            consoleMessage[4] = e.Receiver;
+            consoleMessage[5] = e.Message;
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch.W**<<] {botUserName}>{e.Receiver}: {e.Message}";
+            Program.SendToConsole(consoleMessage, true);
         }
 
         // User events
         private void Client_OnUserJoined(object sender, OnUserJoinedArgs e)
         {
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.Username;
+            consoleMessage[4] = e.Channel;
+            consoleMessage[5] = "Joined Channel";
             // TODO: Add code to start timer for user
             // check for new user, if new, add user to system (ralphie.users ?)
             // mark start time for user
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has joined #{e.Channel}";
-            Program.SendToConsole(message);
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has joined #{e.Channel}";
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnUserLeft(object sender, OnUserLeftArgs e)
         {
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.Username;
+            consoleMessage[4] = e.Channel;
+            consoleMessage[5] = "Left Channel";
             // TODO:
             // Stop counting user time for the user
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has left #{e.Channel}";
-            Program.SendToConsole(message);
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has left #{e.Channel}";
+            Program.SendToConsole(consoleMessage);
         }
         private void Client_OnUserTimedout(object sender, OnUserTimedoutArgs e)
         {
-            string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has been timed out.";
-            Program.SendToConsole(message);
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.Username;
+            consoleMessage[4] = e.Channel;
+            consoleMessage[5] = "Timed Out";
+            //string message = $"[{DateTime.Now.ToString("MM/dd - HH:mm")} | Twitch] {e.Username} has been timed out.";
+            Program.SendToConsole(consoleMessage);
 
             client.SendMessage($"Get rekt {e.Username}");
         }
@@ -172,13 +290,18 @@ namespace ralphie.twitch.chat
         // Channel events
         private void Client_OnJoinedChannel(object sender, OnJoinedChannelArgs e)
         {
-            Console.WriteLine($"\rAttempting to send message to {e.Channel}.");
-            client.SendMessage("Hello",false);
-            Console.WriteLine("\rMessage Sent?");
+            client.SendMessage($"Hello I am {botUserName}, powered by ralphiebot");
         }
         private void Client_OnLeftChannel(object sender, OnLeftChannelArgs e)
         {
-            throw new NotImplementedException();
+            string[] consoleMessage = new string[6];
+            consoleMessage[0] = "Twitch";
+            consoleMessage[1] = "#";
+            consoleMessage[2] = ">>>";
+            consoleMessage[3] = e.BotUsername;
+            consoleMessage[4] = e.Channel;
+            consoleMessage[5] = "Left Channel";
+            Program.SendToConsole(consoleMessage);
         }
     }
 }
