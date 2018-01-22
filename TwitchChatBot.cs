@@ -5,6 +5,7 @@ using TwitchLib;
 using TwitchLib.Models.Client;
 using TwitchLib.Events.Client;
 using ralphie.Config;
+using ralphie.Commands;
 
 namespace ralphie.twitch.chat
 {
@@ -30,15 +31,12 @@ namespace ralphie.twitch.chat
 
             consoleMessage[5] = "Initializing Twitch Chat Bot...";
             Program.SendToConsole(consoleMessage);
-            client = new TwitchClient(credentials, streamerChannel, logging: false);
+            client = new TwitchClient(credentials, streamerChannel, logging: false);            
 
-            string test = "!";   // Replace this later with logic to read from commands.xml
-            char cmd = test[0];
-
-            consoleMessage[5] = $"Setting command identifier to {cmd}.";
+            consoleMessage[5] = $"Setting command identifier to {Commands.Commands.CommandPrefix}.";
             Program.SendToConsole(consoleMessage);
-            client.AddChatCommandIdentifier(cmd);
-            client.AddWhisperCommandIdentifier(cmd);
+            client.AddChatCommandIdentifier(Commands.Commands.CommandPrefix);
+            client.AddWhisperCommandIdentifier(Commands.Commands.CommandPrefix);
 
             // set message throttling
             consoleMessage[5] = "Setting Twitch chat throttle set to 19 messages every 30 seconds.";

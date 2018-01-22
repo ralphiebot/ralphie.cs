@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ralphie.Commands
 {
-    class Command
+    class Commands
     {
-        public char CommandPrefix { get; set; };
+        public static char CommandPrefix { get; set; }
 
         // TODO
     }

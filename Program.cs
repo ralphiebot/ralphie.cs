@@ -124,7 +124,7 @@ namespace ralphie
             Console.WriteLine(args[5]);
             Console.Write(">");
         }
-    public static class GlobalOptions   // Is there a better way to create globally accessible variables??
+        public static class GlobalOptions   // Is there a better way to create globally accessible variables??
         {
             public static bool IsLogging = false;
             public static bool IsConnected = false;
