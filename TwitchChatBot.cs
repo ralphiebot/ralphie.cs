@@ -11,9 +11,9 @@ namespace Ralphie.Twitch.Chat
 {
     internal class TwitchChatBot
     {
-        static string botUserName = Configs.GetString("Twitch_BotName");
-        static string botToken = Configs.GetString("Twitch_BotToken");
-        static string streamerChannel = Configs.GetString("Twitch_StreamerChannel");
+        readonly static string botUserName = Configs.GetString("Twitch_BotName");
+        readonly static string botToken = Configs.GetString("Twitch_BotToken");
+        readonly static string streamerChannel = Configs.GetString("Twitch_StreamerChannel");
         string[] consoleMessage = {"Twitch","Chat",">>>","","","" };
 
         readonly ConnectionCredentials credentials = new ConnectionCredentials(botUserName, botToken);
