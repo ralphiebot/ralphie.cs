@@ -28,6 +28,7 @@ namespace Ralphie
                 if (input.ToLowerInvariant() == "exit")
                 {
                     bot.Disconnect();
+                    pubSub.Disconnect();
                     Environment.Exit(0);
                 }
                 else
@@ -79,12 +80,10 @@ namespace Ralphie
             var foregroundColor = ConsoleColor.White;   // Set to default color, just in case.  Also makes less code writing later in the switches.
 
             // write timestamp first
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.Write($"\r[");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write($"\r[");
             Console.Write($"{DateTime.Now.ToString("MM/dd - HH:mm")} ");
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.Write($"|| ");
+            Console.Write($"] ");
 
             // Check location and color appropriately
             switch (args[0])
@@ -112,9 +111,8 @@ namespace Ralphie
                     break;
             }
 
-            Console.Write("] ");
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"{args[2]} ");   // write direction
+            Console.Write($" {args[2]} ");   // write direction
 
             switch (args[2])    // Check direciton of message
             {
@@ -130,7 +128,19 @@ namespace Ralphie
             }
 
             // Write event sender username
-            Console.Write($"{args[3]}: ");
+            if (args[3] != "")
+            {
+                if (args[5] == "Joined Channel")
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{args[3]} ");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write($"{args[3]}: ");
+                }
+            }
 
             // Reset to white and writeline message, then append prompt
             Console.ForegroundColor = ConsoleColor.White;
