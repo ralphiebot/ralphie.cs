@@ -16,11 +16,11 @@ namespace Ralphie
                 Configs.FirstTimeSetup();
             }
 
-            PubSub pubSub = new PubSub();
             TwitchChatBot bot = new TwitchChatBot();
+            PubSub pubSub = new PubSub(ref bot);
 
-            pubSub.Connect();
             bot.Connect();
+            pubSub.Connect();
 
             do
             {
