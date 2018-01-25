@@ -4,16 +4,17 @@ using System;
 using TwitchLib;
 using TwitchLib.Models.Client;
 using TwitchLib.Events.Client;
-using ralphie.Config;
-using ralphie.Commands;
+using Ralphie.Config;
+using Ralphie.Commands;
 
-namespace ralphie.twitch.chat
+namespace Ralphie.Twitch.Chat
 {
     internal class TwitchChatBot
     {
         static string botUserName = Configs.GetString("Twitch_BotName");
         static string botToken = Configs.GetString("Twitch_BotToken");
         static string streamerChannel = Configs.GetString("Twitch_StreamerChannel");
+        string[] consoleMessage = {"Twitch","Chat",">>>","","","" };
 
         readonly ConnectionCredentials credentials = new ConnectionCredentials(botUserName, botToken);
         TwitchClient client;
@@ -22,13 +23,6 @@ namespace ralphie.twitch.chat
         // Call bot to connect
         internal void Connect()
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "System";
-            consoleMessage[2] = ">>>";
-            consoleMessage[3] = "";
-            consoleMessage[4] = "";
-
             consoleMessage[5] = "Initializing Twitch Chat Bot...";
             Program.SendToConsole(consoleMessage);
             client = new TwitchClient(credentials, streamerChannel, logging: false);            
@@ -81,12 +75,6 @@ namespace ralphie.twitch.chat
         // Call bot to disconnect
         internal void Disconnect()
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "Connection";
-            consoleMessage[2] = ">>>";
-            consoleMessage[3] = "";
-            consoleMessage[4] = "";
             consoleMessage[5] = "Disconnecting";
             Program.SendToConsole(consoleMessage);
             
@@ -111,23 +99,13 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "Connection";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = "Incorrect Login!";
-            consoleMessage[4] = "";
             consoleMessage[5] = e.Exception.Message;
             Program.SendToConsole(consoleMessage);
         }
         private void Client_OnConnecitonError(object sender, OnConnectionErrorArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "Connection";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = "Connection Error!";
-            consoleMessage[4] = "";
             consoleMessage[5] = e.Error.Message;
             Program.SendToConsole(consoleMessage);
 
@@ -138,13 +116,7 @@ namespace ralphie.twitch.chat
             // Start up chatt throttlers
             client.ChatThrottler.StartQueue();
             client.WhisperThrottler.StartQueue();
-
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "Connection";
-            consoleMessage[2] = ">>>";
-            consoleMessage[3] = "";
-            consoleMessage[4] = "";
+            
             consoleMessage[5] = "Connected";
             Program.SendToConsole(consoleMessage);
             
@@ -152,12 +124,6 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnDisconnected(object sender, OnDisconnectedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
-            consoleMessage[1] = "Connection";
-            consoleMessage[2] = ">>>";
-            consoleMessage[3] = "";
-            consoleMessage[4] = "";
             consoleMessage[5] = "Disconnected";
             Program.SendToConsole(consoleMessage);
         }
@@ -165,10 +131,7 @@ namespace ralphie.twitch.chat
         // Message events
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.ChatMessage.Username;
             consoleMessage[4] = e.ChatMessage.Channel;
             consoleMessage[5] = e.ChatMessage.Message;
@@ -178,10 +141,7 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.Command.ChatMessage.Username;
             consoleMessage[4] = e.Command.ChatMessage.Channel;
             consoleMessage[5] = e.Command.ChatMessage.Message;
@@ -190,10 +150,7 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnMessageSent(object sender, OnMessageSentArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = "<<<";
             consoleMessage[3] = e.SentMessage.DisplayName;
             consoleMessage[4] = e.SentMessage.Channel;
             consoleMessage[5] = e.SentMessage.Message;
@@ -205,10 +162,7 @@ namespace ralphie.twitch.chat
         // Whisper events
         private void Client_OnWhisperReceived(object sender, OnWhisperReceivedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "**";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.WhisperMessage.Username;
             consoleMessage[4] = e.WhisperMessage.BotUsername;
             consoleMessage[5] = e.WhisperMessage.Message;
@@ -217,10 +171,7 @@ namespace ralphie.twitch.chat
         }        
         private void Client_OnWhisperCommandReceived(object sender, OnWhisperCommandReceivedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "**";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.WhisperMessage.Username;
             consoleMessage[4] = e.WhisperMessage.BotUsername;
             consoleMessage[5] = e.WhisperMessage.Message;
@@ -229,8 +180,6 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnWhisperSent(object sender, OnWhisperSentArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "**";
             consoleMessage[2] = "<<<";
             consoleMessage[3] = e.Username;
@@ -243,10 +192,7 @@ namespace ralphie.twitch.chat
         // User events
         private void Client_OnUserJoined(object sender, OnUserJoinedArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.Username;
             consoleMessage[4] = e.Channel;
             consoleMessage[5] = "Joined Channel";
@@ -258,10 +204,7 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnUserLeft(object sender, OnUserLeftArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.Username;
             consoleMessage[4] = e.Channel;
             consoleMessage[5] = "Left Channel";
@@ -272,10 +215,7 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnUserTimedout(object sender, OnUserTimedoutArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.Username;
             consoleMessage[4] = e.Channel;
             consoleMessage[5] = "Timed Out";
@@ -292,10 +232,7 @@ namespace ralphie.twitch.chat
         }
         private void Client_OnLeftChannel(object sender, OnLeftChannelArgs e)
         {
-            string[] consoleMessage = new string[6];
-            consoleMessage[0] = "Twitch";
             consoleMessage[1] = "#";
-            consoleMessage[2] = ">>>";
             consoleMessage[3] = e.BotUsername;
             consoleMessage[4] = e.Channel;
             consoleMessage[5] = "Left Channel";
