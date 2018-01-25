@@ -5,7 +5,7 @@ using TwitchLib;
 using TwitchLib.Models.API;
 
 
-namespace ralphie.twitch.api
+namespace Ralphie.Twitch.API
 {
     internal class RalphieTwitchAPI
     {

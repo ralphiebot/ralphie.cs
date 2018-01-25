@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 
-namespace ralphie.Config
+namespace Ralphie.Config
 {
     internal class Configs
     {
