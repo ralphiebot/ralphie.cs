@@ -1,9 +1,11 @@
 ﻿using System;
-using ralphie.twitch.chat;
-using ralphie.twitch.api;
-using ralphie.Config;
+using Ralphie.Twitch.Chat;
+using Ralphie.Twitch.API;
+using Ralphie.Config;
+using Ralphie.Twitch.PubSub;
+using TwitchLib;
 
-namespace ralphie
+namespace Ralphie
 {
     class Program
     {
@@ -14,7 +16,10 @@ namespace ralphie
                 Configs.FirstTimeSetup();
             }
 
+            PubSub pubSub = new PubSub();
             TwitchChatBot bot = new TwitchChatBot();
+
+            pubSub.Connect();
             bot.Connect();
 
             do
@@ -54,8 +59,16 @@ namespace ralphie
             Console.Write(new string (' ', Console.WindowWidth));
             Console.SetCursorPosition(0, currentLineCursor);
         }
-        public static void SendToConsole(string[] args, bool overwrite=false) // It just makes sense to do it here, rathe than repeat myself, only to have to remove it all later
+        public static void SendToConsole(string[] args, bool overwrite=false) // It just makes sense to do it here, rather than repeat myself, only to have to remove it all later
         {
+            // args[]
+            // [0] Origin module (i.e. Discord, Twitch, etc...)
+            // [1] Module subsection (i.e. "Chat" for the chat subsystem, "#" for channel messages, "**" for whispers/PM)
+            // [2] Direction of message: >>> for incoming, <<< for outgoing
+            // [3] Who said it
+            // [4] Where it was said
+            // [5] What was said
+
             //  move cursor to replace line if overwrite is true
             if (overwrite == true)
             {
@@ -128,6 +141,6 @@ namespace ralphie
         {
             public static bool IsLogging = false;
             public static bool IsConnected = false;
-        }
+        }        
     }
 }
